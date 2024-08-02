@@ -97,7 +97,14 @@ namespace NitroxModel.Helper
         public static event Action GamePlatformChanged;
         public static IGamePlatform GamePlatform
         {
-            get { return gamePlatform; }
+            get
+            {
+                if (gamePlatform == null)
+                {
+                    _ = GamePath; // Ensure gamePath is set
+                }
+                return gamePlatform;
+            }
             set
             {
                 if (gamePlatform != value)
@@ -121,8 +128,8 @@ namespace NitroxModel.Helper
                 GameFinderResult potentiallyValidResult = finderResults.LastOrDefault();
                 if (potentiallyValidResult?.IsOk == true)
                 {
-                    Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Installation.Path}'");
-                    gamePath = potentiallyValidResult.Installation.Path;
+                    Log.Debug($"Game installation was found by {potentiallyValidResult.FinderName} at '{potentiallyValidResult.Path}'");
+                    gamePath = potentiallyValidResult.Path;
                     GamePlatform = GamePlatforms.GetPlatformByGameDir(gamePath);
                     return gamePath;
                 }
